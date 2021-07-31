@@ -149,16 +149,11 @@ mod test_open_aip {
 ";
 
   #[test]
-  fn test_load_openaip() {
+  fn test_load_from_reader() {
     // load the file
-    let loader = AirspaceLoader::new();
-    let airspaces = loader.load_from_file(OPENAIP_EXAMPLE);
-    let airspaces = match airspaces {
-      Ok(airspaces) => airspaces,
-      Err(e) => panic!("{}", e),
-    };
+    let airspaces = AirspaceLoader::load_from_reader(Box::new(OPENAIP_EXAMPLE.as_bytes())).unwrap();
 
-    let airspace = &airspaces[0];
+    let airspace = &airspaces.airspaces[0];
 
     // Check values
     assert_eq!(airspace.name, "ALB-OST");
