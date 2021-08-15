@@ -1,4 +1,5 @@
 // use serde::de::{self, Deserialize, Deserializer, Visitor};
+use serde::de::SeqAccess;
 use serde::Deserialize;
 use serde::Deserializer;
 
@@ -85,8 +86,14 @@ pub enum AirspaceCategory {
 #[derive(Debug, Clone)]
 pub struct Polygon {
   // #[serde(rename = "POLYGON")]
-  point: Vec<(f32, f32)>,
+  points: Vec<(f32, f32)>,
   // point: String,
+}
+
+impl Polygon {
+  fn new(points: Vec<(f32, f32)>) -> Self {
+    Polygon { points }
+  }
 }
 
 impl OpenAip {
@@ -95,50 +102,12 @@ impl OpenAip {
   }
 }
 
+// ------------------------------------------------------------------------------
+// serde Deserialization trait implementation
+// ------------------------------------------------------------------------------
+
 use serde::de::{self, Visitor};
 use std::fmt;
-
-struct PolygonVisitor {}
-
-// Define the polygon visitor
-impl PolygonVisitor {
-  fn new() -> Self {
-    PolygonVisitor {}
-  }
-
-  fn points_from_string(string: &str) -> Vec<(f32, f32)> {
-    let point: (f32, f32);
-
-    // let string_points: Vec<&str> = string.split(",").collect();
-    string.split(",").map(|s| println!("{}", s));
-
-    vec![(1.0, 2.0)]
-  }
-}
-
-impl<'de> Visitor<'de> for PolygonVisitor {
-  type Value = (f32, f32);
-
-  fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
-    formatter.write_str("")
-  }
-
-  fn visit_string<E>(self, value: String) -> Result<Self::Value, E>
-  where
-    E: de::Error,
-  {
-    // TODO map the string to (f32, f32)
-    Ok((1.0, 2.0))
-  }
-
-  fn visit_bytes<E>(self, value: &[u8]) -> Result<Self::Value, E> {
-    Ok((3.0, 4.0))
-  }
-
-  fn visit_seq<A>(self, seq: A) -> Result<Self::Value, E> {
-    Ok((5.0, 6.0))
-  }
-}
 
 // drive the visitor
 impl<'de> Deserialize<'de> for Polygon {
@@ -146,7 +115,89 @@ impl<'de> Deserialize<'de> for Polygon {
   where
     D: Deserializer<'de>,
   {
-    deserializer.deserialize_any(PolygonVisitor)
+    enum Field {
+      Points,
+    }
+
+    impl<'de> Deserialize<'de> for Field {
+      fn deserialize<D>(deserializer: D) -> Result<Field, D::Error>
+      where
+        D: Deserializer<'de>,
+      {
+        struct FieldVisitor;
+
+        impl<'de> Visitor<'de> for FieldVisitor {
+          type Value = Field;
+
+          fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+            formatter.write_str("`points`")
+          }
+
+          fn visit_str<E>(self, value: &str) -> Result<Field, E>
+          where
+            E: de::Error,
+          {
+            match value {
+              "points" => Ok(Field::Points),
+              _ => Err(de::Error::unknown_field(value, FIELDS)),
+            }
+          }
+        }
+
+        deserializer.deserialize_any(FieldVisitor)
+      }
+    }
+
+    struct PolygonVisitor;
+
+    // Define the polygon visitor
+    impl PolygonVisitor {
+      fn points_from_string(string: &str) -> Vec<(f32, f32)> {
+        let point: (f32, f32);
+
+        // let string_points: Vec<&str> = string.split(",").collect();
+        string.split(",").map(|s| println!("{}", s));
+
+        vec![(1.0, 2.0)]
+      }
+    }
+
+    impl<'de> Visitor<'de> for PolygonVisitor {
+      type Value = Polygon;
+
+      fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+        formatter.write_str("struct Polygon")
+      }
+
+      fn visit_string<E>(self, value: String) -> Result<Self::Value, E>
+      where
+        E: de::Error,
+      {
+        // PolygonVisitor::points_from_string(value)
+        // TODO map the string to (f32, f32)
+        Ok(Polygon {
+          points: vec![(3.0, 4.0)],
+        })
+      }
+
+      fn visit_bytes<E>(self, value: &[u8]) -> Result<Self::Value, E> {
+        Ok(Polygon {
+          points: vec![(3.0, 4.0)],
+        })
+      }
+
+      fn visit_seq<A>(self, seq: A) -> Result<Self::Value, A::Error>
+      where
+        A: SeqAccess<'de>,
+      {
+        Ok(Polygon {
+          points: vec![(3.0, 4.0)],
+        })
+      }
+    }
+
+    const FIELDS: &'static [&'static str] = &["points"];
+    deserializer.deserialize_struct("Polygon", FIELDS, PolygonVisitor)
   }
 }
 
