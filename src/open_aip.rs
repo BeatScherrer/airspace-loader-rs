@@ -1,7 +1,7 @@
 // use serde::de::{self, Deserialize, Deserializer, Visitor};
+use log::trace;
 use serde::de::SeqAccess;
-use serde::Deserialize;
-use serde::Deserializer;
+use serde::{Deserialize, Deserializer};
 
 #[derive(Debug, Deserialize)]
 #[serde(rename = "OPENAIP")]
@@ -44,7 +44,7 @@ pub struct Airspace {
   #[serde(rename = "ALTLIMIT_BOTTOM")]
   pub lower: AltLimit,
 
-  #[serde(rename = "GEOMETRY")]
+  // #[serde(rename = "GEOMETRY")]
   geometry: Polygon,
 }
 
@@ -103,9 +103,8 @@ impl OpenAip {
 }
 
 // ------------------------------------------------------------------------------
-// serde Deserialization trait implementation
+// Polygon serde deserialization
 // ------------------------------------------------------------------------------
-
 use serde::de::{self, Visitor};
 use std::fmt;
 
@@ -115,6 +114,8 @@ impl<'de> Deserialize<'de> for Polygon {
   where
     D: Deserializer<'de>,
   {
+    trace!("test");
+
     enum Field {
       Points,
     }
@@ -144,7 +145,7 @@ impl<'de> Deserialize<'de> for Polygon {
           }
         }
 
-        deserializer.deserialize_any(FieldVisitor)
+        deserializer.deserialize_str(FieldVisitor)
       }
     }
 
@@ -200,13 +201,3 @@ impl<'de> Deserialize<'de> for Polygon {
     deserializer.deserialize_struct("Polygon", FIELDS, PolygonVisitor)
   }
 }
-
-// Implement Deserialization trait for OpenAip
-// impl<'de> Deserialize<'de> for OpenAip {
-//   fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-//   where
-//     D: Deserializer<'de>,
-//   {
-//     enum Field
-//   }
-// }

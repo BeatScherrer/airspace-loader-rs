@@ -36,9 +36,8 @@ fn main() {
 
   let config = Config::builder()
     .appender(Appender::builder().build("stdout", Box::new(stdout)))
-    .logger(Logger::builder().build("foo", LevelFilter::Trace))
-    .logger(Logger::builder().build("beat::open_aip", LevelFilter::Warn))
-    .build(Root::builder().appender("stdout").build(LevelFilter::Warn))
+    .logger(Logger::builder().build("airspace_loader_rs", LevelFilter::Trace))
+    .build(Root::builder().appender("stdout").build(LevelFilter::Debug))
     .unwrap();
 
   log4rs::init_config(config).unwrap();

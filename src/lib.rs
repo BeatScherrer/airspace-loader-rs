@@ -36,23 +36,12 @@ impl AirspaceLoader {
         println!("{:#?}", airspaces);
         Ok(airspaces)
       }
-      Err(e) => Err(io::Error::new(io::ErrorKind::InvalidData, e)),
+      Err(e) => {
+        log::error!("{}", e);
+        Err(io::Error::new(io::ErrorKind::InvalidData, e))
+      }
     }
   }
-
-  //   pub fn parse_polygon_from_string(string: &str) -> Vec<(f32, f32)> {
-  //     let polygon: Vec<(f32, f32)> = vec![];
-
-  //     let points: Vec<&str> = string.split(",").collect();
-  //     println!("{:#?}", points);
-
-  //     for item in points {
-  //       let point: Vec<&str> = item.split(" ").collect();
-  //       println!("{:#?}", point);
-  //     }
-
-  //     polygon
-  //   }
 }
 
 #[cfg(test)]
