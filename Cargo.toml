@@ -1,5 +1,5 @@
 [package]
-name = "beat"
+name = "airspace_loader_rs"
 version = "0.1.0"
 edition = "2018"
 authors = ["Beat Scherrer <beat.scherrer@gmail.com>"]
