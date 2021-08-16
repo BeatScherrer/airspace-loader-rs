@@ -1,7 +1,5 @@
 // use serde::de::{self, Deserialize, Deserializer, Visitor};
-use log::trace;
-use serde::de::MapAccess;
-use serde::de::SeqAccess;
+use serde::de::Visitor;
 use serde::{Deserialize, Deserializer};
 
 #[derive(Debug, Deserialize)]
@@ -46,7 +44,7 @@ pub struct Airspace {
   pub lower: AltLimit,
 
   #[serde(rename = "GEOMETRY")]
-  geometry: Polygon,
+  pub geometry: Polygon,
 }
 
 #[derive(Debug, Deserialize, Clone)]
@@ -84,10 +82,11 @@ pub enum AirspaceCategory {
   WAVE,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Deserialize, Clone)]
 pub struct Polygon {
-  points: Vec<(f32, f32)>,
-  // point: String,
+  #[serde(rename = "POLYGON")]
+  #[serde(deserialize_with = "points_from_string")]
+  pub points: Vec<(f32, f32)>,
 }
 
 impl Polygon {
@@ -102,131 +101,44 @@ impl OpenAip {
   }
 }
 
-// ------------------------------------------------------------------------------
-// Polygon serde deserialization
-// ------------------------------------------------------------------------------
-use serde::de::{self, Visitor};
+fn points_from_string<'de, D>(d: D) -> Result<Vec<(f32, f32)>, D::Error>
+where
+  D: Deserializer<'de>,
+{
+  let mut points: Vec<(f32, f32)> = vec![];
+
+  let stringified: String = d.deserialize_string(StringVisitor).unwrap();
+  let points_string: Vec<&str> = stringified.split(',').collect();
+
+  for point_string in points_string {
+    let point: Vec<f32> = point_string
+      .trim()
+      .split(' ')
+      .map(|s| s.parse::<f32>().unwrap())
+      .collect();
+
+    let point_tuple: (f32, f32) = (point[0], point[1]);
+    points.push(point_tuple);
+  }
+
+  Ok(points)
+}
+
+struct StringVisitor;
+
 use std::fmt;
 
-// drive the visitor
-impl<'de> Deserialize<'de> for Polygon {
-  fn deserialize<D>(deserializer: D) -> Result<Polygon, D::Error>
+impl<'de> Visitor<'de> for StringVisitor {
+  type Value = String;
+
+  fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+    formatter.write_str("string")
+  }
+
+  fn visit_str<E>(self, value: &str) -> Result<Self::Value, E>
   where
-    D: Deserializer<'de>,
+    E: serde::de::Error,
   {
-    enum Field {
-      Points,
-    }
-
-    impl<'de> Deserialize<'de> for Field {
-      fn deserialize<D>(deserializer: D) -> Result<Field, D::Error>
-      where
-        D: Deserializer<'de>,
-      {
-        struct FieldVisitor;
-
-        impl<'de> Visitor<'de> for FieldVisitor {
-          type Value = Field;
-
-          fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
-            formatter.write_str("`POLYGON`")
-          }
-
-          fn visit_str<E>(self, value: &str) -> Result<Field, E>
-          where
-            E: de::Error,
-          {
-            // note: possible tags are defined here
-            match value {
-              "POLYGON" => Ok(Field::Points),
-              "points" => Ok(Field::Points),
-              _ => {
-                log::error!("error occurred");
-                Err(de::Error::unknown_field(value, FIELDS))
-              }
-            }
-          }
-        }
-
-        deserializer.deserialize_map(FieldVisitor)
-      }
-    }
-
-    struct PolygonVisitor;
-
-    // Define the polygon visitor
-    impl PolygonVisitor {
-      fn points_from_string(string: &str) -> Vec<(f32, f32)> {
-        let point: (f32, f32);
-
-        // let string_points: Vec<&str> = string.split(",").collect();
-        // string.split(",").map(|s| println!("{}", s));
-
-        vec![(1.0, 2.0)]
-      }
-    }
-
-    impl<'de> Visitor<'de> for PolygonVisitor {
-      type Value = Polygon;
-
-      fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
-        formatter.write_str("struct Polygon")
-      }
-
-      // fn visit_string<E>(self, value: String) -> Result<Self::Value, E>
-      // where
-      //   E: de::Error,
-      // {
-      //   // TODO map the string to (f32, f32)
-      //   Ok(Polygon {
-      //     points: vec![(3.0, 4.0)],
-      //   })
-      // }
-
-      // fn visit_bytes<E>(self, value: &[u8]) -> Result<Self::Value, E> {
-      //   Ok(Polygon {
-      //     points: vec![(3.0, 4.0)],
-      //   })
-      // }
-
-      // fn visit_seq<A>(self, seq: A) -> Result<Self::Value, A::Error>
-      // where
-      //   A: SeqAccess<'de>,
-      // {
-      //   Ok(Polygon {
-      //     points: vec![(3.0, 4.0)],
-      //   })
-      // }
-
-      fn visit_map<V>(self, mut map: V) -> Result<Self::Value, V::Error>
-      where
-        V: MapAccess<'de>,
-      {
-        let mut points = None;
-
-        while let Some(key) = map.next_key()? {
-          match key {
-            Field::Points => {
-              if points.is_some() {
-                return Err(de::Error::duplicate_field("points"));
-              }
-
-              // TODO: throws here, debug
-              log::debug!("############ c");
-              // points = ;
-              log::debug!("############ d");
-              points = Some(vec![(1.0, 2.0)]);
-            }
-          }
-        }
-
-        let points = points.ok_or_else(|| de::Error::missing_field("points"))?;
-
-        Ok(Polygon::new(points))
-      }
-    }
-
-    const FIELDS: &'static [&'static str] = &["POLGYON"];
-    deserializer.deserialize_struct("POLYGON", FIELDS, PolygonVisitor)
+    Ok(String::from(value))
   }
 }
