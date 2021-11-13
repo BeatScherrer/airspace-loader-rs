@@ -41,8 +41,8 @@ pub fn load_from_reader(reader: Box<dyn Read>) -> Result<open_aip::OpenAip, io::
 #[cfg(test)]
 mod test_open_aip {
 
-  //   use super::core::*;
   use super::*;
+  use pretty_assertions::assert_eq;
 
   static OPENAIP_EXAMPLE: &str = r#"
   <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
