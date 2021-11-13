@@ -21,7 +21,7 @@ pub fn load_from_file(file_name: &str) -> Result<open_aip::OpenAip, io::Error> {
   load_from_reader(f)
 }
 
-pub fn load_from_reader(reader: Box<dyn Read>) -> Result<open_aip::OpenAip, io::Error> {
+pub fn load_from_reader(reader: impl Read) -> Result<open_aip::OpenAip, io::Error> {
   debug!("loading from reader");
   let result: Result<open_aip::OpenAip, serde_xml_rs::Error> = serde_xml_rs::from_reader(reader);
 
@@ -70,7 +70,7 @@ mod test_open_aip {
   #[test]
   fn test_load_from_reader() {
     // load the file
-    let airspaces = load_from_reader(Box::new(OPENAIP_EXAMPLE.as_bytes())).unwrap();
+    let airspaces = load_from_reader(OPENAIP_EXAMPLE.as_bytes()).unwrap();
 
     // Check the first airspaces element
     let airspace = &airspaces.get_airspaces()[0];
