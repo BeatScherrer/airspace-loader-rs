@@ -70,7 +70,7 @@ mod test_open_aip {
   #[test]
   fn test_load_from_reader() {
     // load the file
-    let airspaces = AirspaceLoader::load_from_reader(Box::new(OPENAIP_EXAMPLE.as_bytes())).unwrap();
+    let airspaces = load_from_reader(Box::new(OPENAIP_EXAMPLE.as_bytes())).unwrap();
 
     // Check the first airspaces element
     let airspace = &airspaces.get_airspaces()[0];

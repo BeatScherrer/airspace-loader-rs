@@ -47,6 +47,5 @@ fn main() {
   log::trace!(target:"beat.open_aip", "Hello, World!");
 
   // // Create the airspace loader
-  airspace_loader_rs::AirspaceLoader::load_from_reader(Box::new(OPENAIP_EXAMPLE.as_bytes()))
-    .unwrap();
+  airspace_loader_rs::load_from_reader(Box::new(OPENAIP_EXAMPLE.as_bytes())).unwrap();
 }

@@ -1,5 +1,5 @@
 use airspace_loader_rs::airspace::core;
-use airspace_loader_rs::AirspaceLoader;
+use airspace_loader_rs::load_from_file;
 
 #[test]
 fn load_openaip_file() {
@@ -18,5 +18,5 @@ fn load_openaip_file() {
   println!("{:?}", test_airspace);
 
   // Create the airspace loader to read from a file
-  AirspaceLoader::load_from_file("open_aip_test.xml").unwrap();
+  load_from_file("open_aip_test.xml").unwrap();
 }
