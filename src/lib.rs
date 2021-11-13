@@ -1,5 +1,5 @@
 pub mod airspace;
-mod open_aip;
+pub mod open_aip;
 
 // Assume OPEN aip data format for now since no other format is used and for POC
 pub struct AirspaceLoader {}
@@ -10,36 +10,30 @@ use std::fs;
 use std::io;
 use std::io::Read;
 
-impl AirspaceLoader {
-  pub fn new() -> AirspaceLoader {
-    AirspaceLoader {}
-  }
+pub fn load_from_file(file_name: &str) -> Result<open_aip::OpenAip, io::Error> {
+  warn!("this is a test log");
+  println!();
 
-  pub fn load_from_file(file_name: &str) -> Result<open_aip::OpenAip, io::Error> {
-    warn!("this is a test log");
-    println!();
+  // open the file, propagate file errors
+  let f = Box::new(fs::File::open(&file_name)?);
 
-    // open the file, propagate file errors
-    let f = Box::new(fs::File::open(&file_name)?);
+  // TODO Pass format based on file extension
+  load_from_reader(f)
+}
 
-    // TODO Pass format based on file extension
-    AirspaceLoader::load_from_reader(f)
-  }
+pub fn load_from_reader(reader: Box<dyn Read>) -> Result<open_aip::OpenAip, io::Error> {
+  debug!("loading from reader");
+  let result: Result<open_aip::OpenAip, serde_xml_rs::Error> = serde_xml_rs::from_reader(reader);
 
-  pub fn load_from_reader(reader: Box<dyn Read>) -> Result<open_aip::OpenAip, io::Error> {
-    debug!("loading from reader");
-    let result: Result<open_aip::OpenAip, serde_xml_rs::Error> = serde_xml_rs::from_reader(reader);
-
-    // Convert the rust error to io error
-    match result {
-      Ok(airspaces) => {
-        println!("{:#?}", airspaces);
-        Ok(airspaces)
-      }
-      Err(e) => {
-        log::error!("{}", e);
-        Err(io::Error::new(io::ErrorKind::InvalidData, e))
-      }
+  // Convert the rust error to io error
+  match result {
+    Ok(airspaces) => {
+      println!("{:#?}", airspaces);
+      Ok(airspaces)
+    }
+    Err(e) => {
+      log::error!("{}", e);
+      Err(io::Error::new(io::ErrorKind::InvalidData, e))
     }
   }
 }

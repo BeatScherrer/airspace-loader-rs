@@ -1,8 +1,8 @@
 // use serde::de::{self, Deserialize, Deserializer, Visitor};
 use serde::de::Visitor;
-use serde::{Deserialize, Deserializer};
+use serde::{Deserialize, Deserializer, Serialize};
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 #[serde(rename = "OPENAIP")]
 pub struct OpenAip {
   #[serde(rename = "VERSION")]
@@ -15,13 +15,13 @@ pub struct OpenAip {
   airspaces: Airspaces,
 }
 
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Airspaces {
   #[serde(rename = "ASP")]
   pub airspaces: Vec<Airspace>,
 }
 
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Airspace {
   #[serde(rename = "CATEGORY")]
   pub category: AirspaceCategory,
@@ -47,7 +47,7 @@ pub struct Airspace {
   pub geometry: Polygon,
 }
 
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct AltLimit {
   #[serde(rename = "ALT")]
   altitude: Altitude,
@@ -56,12 +56,12 @@ pub struct AltLimit {
   reference: AltitudeReference,
 }
 
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub enum AltitudeReference {
   STD,
 }
 
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Altitude {
   #[serde(rename = "UNIT")]
   unit: AltitudeUnit,
@@ -70,19 +70,19 @@ pub struct Altitude {
   value: u32,
 }
 
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 enum AltitudeUnit {
   FL,
   FT,
   M,
 }
 
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub enum AirspaceCategory {
   WAVE,
 }
 
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Polygon {
   #[serde(rename = "POLYGON")]
   #[serde(deserialize_with = "points_from_string")]
