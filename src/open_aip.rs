@@ -1,3 +1,10 @@
+/** this module provides deserialization of the open aip airspace specification.
+ * The airspace loader crate uses an internal airspace structure to which the
+ * open aip specific data structure must be converted to by implementing the
+ * `From` trait.
+ */
+use crate::airspace;
+
 // use serde::de::{self, Deserialize, Deserializer, Visitor};
 use serde::de::Visitor;
 use serde::{Deserialize, Deserializer, Serialize};
@@ -6,19 +13,80 @@ use serde::{Deserialize, Deserializer, Serialize};
 #[serde(rename = "OPENAIP")]
 pub struct OpenAip {
   #[serde(rename = "VERSION")]
-  version: String,
+  pub version: String,
 
   #[serde(rename = "DATAFORMAT")]
-  data_format: f32,
+  pub data_format: f32,
 
   #[serde(rename = "AIRSPACES")]
-  airspaces: Airspaces,
+  pub airspaces: Airspaces,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Airspaces {
   #[serde(rename = "ASP")]
   pub airspaces: Vec<Airspace>,
+}
+
+impl From<&Airspace> for airspace::Airspace {
+  fn from(item: &Airspace) -> Self {
+    airspace::Airspace {
+      lower: match item.lower.altitude.unit {
+        AltitudeUnit::FL => airspace::Altitude::FL(
+          item.lower.altitude.value,
+          match item.lower.reference {
+            AltitudeReference::STD => airspace::AltitudeReference::STD,
+          },
+        ),
+        AltitudeUnit::M => airspace::Altitude::M(
+          item.lower.altitude.value,
+          match item.lower.reference {
+            AltitudeReference::STD => airspace::AltitudeReference::STD,
+          },
+        ),
+        AltitudeUnit::FT => airspace::Altitude::FT(
+          item.lower.altitude.value,
+          match item.lower.reference {
+            AltitudeReference::STD => airspace::AltitudeReference::STD,
+          },
+        ),
+      },
+      upper: match item.upper.altitude.unit {
+        AltitudeUnit::FL => airspace::Altitude::FL(
+          item.upper.altitude.value,
+          match item.upper.reference {
+            AltitudeReference::STD => airspace::AltitudeReference::STD,
+          },
+        ),
+        AltitudeUnit::M => airspace::Altitude::M(
+          item.upper.altitude.value,
+          match item.upper.reference {
+            AltitudeReference::STD => airspace::AltitudeReference::STD,
+          },
+        ),
+        AltitudeUnit::FT => airspace::Altitude::FT(
+          item.upper.altitude.value,
+          match item.upper.reference {
+            AltitudeReference::STD => airspace::AltitudeReference::STD,
+          },
+        ),
+      },
+      id: Some(item.id),
+      version: Some(item.version.clone()),
+      country: item.country.clone(),
+      name: item.name.clone(),
+    }
+  }
+}
+
+impl From<Airspaces> for airspace::Airspaces {
+  fn from(item: Airspaces) -> Self {
+    item
+      .airspaces
+      .iter()
+      .map(|airspace| airspace::Airspace::from(airspace))
+      .collect()
+  }
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]

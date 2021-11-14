@@ -1,0 +1,14 @@
+# Scan this file every 30 seconds
+refresh_rate: 30 seconds
+
+# Add a single console appender
+appenders:
+  stdout:
+    kind: console
+    encoder:
+      pattern: "{h({d(%H:%M:%S)} | {l} | {f}:{L} {m}{n})}"
+
+root:
+  level: info
+  appenders:
+    - stdout
