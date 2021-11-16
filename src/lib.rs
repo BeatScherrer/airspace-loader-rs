@@ -1,5 +1,4 @@
 pub mod airspace;
-
 pub mod open_aip;
 
 // Assume OPEN aip data format for now since no other format is used and for POC
@@ -65,7 +64,7 @@ mod test_open_aip {
 
   fn setup() {
     INIT.call_once(|| {
-      log4rs::init_file("logger_config.yaml", Default::default()).unwrap();
+      pretty_env_logger::init();
     });
   }
 

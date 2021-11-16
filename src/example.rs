@@ -42,7 +42,7 @@ fn main() {
     .build(Root::builder().appender("stdout").build(LevelFilter::Debug))
     .unwrap();
 
-  log4rs::init_config(config).unwrap();
+  pretty_env_logger::init();
 
   log::trace!(target:"beat.open_aip", "Hello, World!");
 
