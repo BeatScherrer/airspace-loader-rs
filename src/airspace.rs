@@ -1,6 +1,8 @@
+use serde::Serialize;
+
 pub type Airspaces = Vec<Airspace>;
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Serialize)]
 pub struct Airspace {
   pub version: Option<String>,
   pub id: Option<u32>,
@@ -10,7 +12,7 @@ pub struct Airspace {
   pub lower: Altitude,
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Serialize)]
 pub enum Altitude {
   /// Flight level is always STD reference.
   FL(u32, AltitudeReference),
@@ -20,7 +22,7 @@ pub enum Altitude {
   FT(u32, AltitudeReference),
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Serialize)]
 pub enum AltitudeReference {
   /// Standard pressure reference. FL implicitly is referenced to STD.
   STD,
