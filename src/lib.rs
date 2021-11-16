@@ -38,12 +38,12 @@ pub fn load_from_reader(
   // deserialize to the specified format
   match specification {
     AirspaceSpecification::OpenAip => {
-      let result: Result<open_aip::Airspaces, serde_xml_rs::Error> =
+      let result: Result<open_aip::OpenAip, serde_xml_rs::Error> =
         serde_xml_rs::from_reader(reader);
 
       info!("test");
       match result {
-        Ok(value) => Ok(airspace::Airspaces::from(value)),
+        Ok(value) => Ok(airspace::Airspaces::from(value.airspaces)),
         Err(e) => {
           error!("{:#?}", e);
           Err(std::io::Error::new(std::io::ErrorKind::InvalidData, e))
@@ -128,7 +128,7 @@ mod test_open_aip {
       version: Some(String::from("367810a0f94887bf79cd9432d2a01142b0426795")),
       id: Some(18024),
       country: String::from("DE"),
-      name: String::from("ALB_OST"),
+      name: String::from("ALB-OST"),
       upper: airspace::Altitude::FL(100, airspace::AltitudeReference::STD),
       lower: airspace::Altitude::FL(75, airspace::AltitudeReference::STD),
     };

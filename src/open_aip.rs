@@ -14,7 +14,6 @@ use serde::{Deserialize, Deserializer, Serialize};
 pub struct OpenAip {
   #[serde(rename = "VERSION")]
   pub version: String,
-
   #[serde(rename = "DATAFORMAT")]
   pub data_format: f32,
 
@@ -93,6 +92,7 @@ impl From<Airspaces> for airspace::Airspaces {
 pub struct Airspace {
   #[serde(rename = "CATEGORY")]
   pub category: AirspaceCategory,
+
   #[serde(rename = "VERSION")]
   pub version: String,
 
@@ -163,11 +163,11 @@ impl Polygon {
   }
 }
 
-impl OpenAip {
-  pub fn get_airspaces(&self) -> Vec<Airspace> {
-    self.airspaces.airspaces.clone()
-  }
-}
+// impl OpenAip {
+//   pub fn get_airspaces(&self) -> Vec<Airspace> {
+//     self.airspaces.airspaces.clone()
+//   }
+// }
 
 fn points_from_string<'de, D>(d: D) -> Result<Vec<(f32, f32)>, D::Error>
 where
