@@ -186,12 +186,6 @@ impl Polygon {
   }
 }
 
-// impl OpenAip {
-//   pub fn get_airspaces(&self) -> Vec<Airspace> {
-//     self.airspaces.airspaces.clone()
-//   }
-// }
-
 fn points_from_string<'de, D>(d: D) -> Result<Vec<(f32, f32)>, D::Error>
 where
   D: Deserializer<'de>,
