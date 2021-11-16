@@ -35,18 +35,24 @@ impl From<&Airspace> for airspace::Airspace {
           item.lower.altitude.value,
           match item.lower.reference {
             AltitudeReference::STD => airspace::AltitudeReference::STD,
+            AltitudeReference::GND => airspace::AltitudeReference::GND,
+            AltitudeReference::MSL => airspace::AltitudeReference::MSL,
           },
         ),
         AltitudeUnit::M => airspace::Altitude::M(
           item.lower.altitude.value,
           match item.lower.reference {
             AltitudeReference::STD => airspace::AltitudeReference::STD,
+            AltitudeReference::GND => airspace::AltitudeReference::GND,
+            AltitudeReference::MSL => airspace::AltitudeReference::MSL,
           },
         ),
-        AltitudeUnit::FT => airspace::Altitude::FT(
+        AltitudeUnit::F => airspace::Altitude::FT(
           item.lower.altitude.value,
           match item.lower.reference {
             AltitudeReference::STD => airspace::AltitudeReference::STD,
+            AltitudeReference::GND => airspace::AltitudeReference::GND,
+            AltitudeReference::MSL => airspace::AltitudeReference::MSL,
           },
         ),
       },
@@ -55,18 +61,24 @@ impl From<&Airspace> for airspace::Airspace {
           item.upper.altitude.value,
           match item.upper.reference {
             AltitudeReference::STD => airspace::AltitudeReference::STD,
+            AltitudeReference::GND => airspace::AltitudeReference::GND,
+            AltitudeReference::MSL => airspace::AltitudeReference::MSL,
           },
         ),
         AltitudeUnit::M => airspace::Altitude::M(
           item.upper.altitude.value,
           match item.upper.reference {
             AltitudeReference::STD => airspace::AltitudeReference::STD,
+            AltitudeReference::GND => airspace::AltitudeReference::GND,
+            AltitudeReference::MSL => airspace::AltitudeReference::MSL,
           },
         ),
-        AltitudeUnit::FT => airspace::Altitude::FT(
+        AltitudeUnit::F => airspace::Altitude::FT(
           item.upper.altitude.value,
           match item.upper.reference {
             AltitudeReference::STD => airspace::AltitudeReference::STD,
+            AltitudeReference::GND => airspace::AltitudeReference::GND,
+            AltitudeReference::MSL => airspace::AltitudeReference::MSL,
           },
         ),
       },
@@ -127,6 +139,8 @@ pub struct AltLimit {
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub enum AltitudeReference {
   STD,
+  GND,
+  MSL,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -141,13 +155,22 @@ pub struct Altitude {
 #[derive(Debug, Serialize, Deserialize, Clone)]
 enum AltitudeUnit {
   FL,
-  FT,
+  F,
   M,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub enum AirspaceCategory {
   WAVE,
+  C,
+  D,
+  E,
+  G,
+  CTR,
+  RMZ,
+  DANGER,
+  RESTRICTED,
+  GLIDING,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
