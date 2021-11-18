@@ -86,6 +86,7 @@ impl From<&Airspace> for airspace::Airspace {
       version: Some(item.version.clone()),
       country: item.country.clone(),
       name: item.name.clone(),
+      geometry: item.geometry.points.clone(),
     }
   }
 }

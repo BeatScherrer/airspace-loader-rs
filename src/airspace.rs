@@ -1,6 +1,11 @@
+// TODO: user geo coordinates for airspace polygon
+// How should round segments be represented generally?
+
 use serde::Serialize;
 
 pub type Airspaces = Vec<Airspace>;
+pub type Polygon = Vec<Point>;
+pub type Point = (f32, f32);
 
 #[derive(Debug, Clone, PartialEq, Serialize)]
 pub struct Airspace {
@@ -10,6 +15,7 @@ pub struct Airspace {
   pub name: String,
   pub upper: Altitude,
   pub lower: Altitude,
+  pub geometry: Polygon,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize)]
@@ -31,11 +37,3 @@ pub enum AltitudeReference {
   /// Ground reference.
   GND,
 }
-
-pub struct Polygon {
-  /// Polygon of the airspace shape.
-  pub points: Vec<Point>,
-}
-
-#[derive(Debug)]
-pub struct Point(f32, f32);
