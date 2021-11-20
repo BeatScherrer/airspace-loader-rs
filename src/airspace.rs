@@ -16,6 +16,24 @@ pub struct Airspace {
   pub upper: Altitude,
   pub lower: Altitude,
   pub geometry: Polygon,
+  pub category: AirspaceCategory
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize)]
+pub enum AirspaceCategory {
+  A,
+  B,
+  C,
+  D,
+  E,
+  F,
+  G,
+  RMZ,
+  TMZ,
+  GLIDING,
+  RESTRICTED,
+  DANGER,
+  WAVE
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize)]

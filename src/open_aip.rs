@@ -27,6 +27,8 @@ pub struct Airspaces {
   pub airspaces: Vec<Airspace>,
 }
 
+
+// TODO split these up
 impl From<&Airspace> for airspace::Airspace {
   fn from(item: &Airspace) -> Self {
     airspace::Airspace {
@@ -87,6 +89,21 @@ impl From<&Airspace> for airspace::Airspace {
       country: item.country.clone(),
       name: item.name.clone(),
       geometry: item.geometry.points.clone(),
+      category: match item.category {
+        AirspaceCategory::A => airspace::AirspaceCategory::A,
+        AirspaceCategory::B => airspace::AirspaceCategory::B,
+        AirspaceCategory::C => airspace::AirspaceCategory::C,
+        AirspaceCategory::D => airspace::AirspaceCategory::D,
+        AirspaceCategory::E => airspace::AirspaceCategory::E,
+        AirspaceCategory::F => airspace::AirspaceCategory::F,
+        AirspaceCategory::G => airspace::AirspaceCategory::G,
+        AirspaceCategory::WAVE => airspace::AirspaceCategory::WAVE,
+        AirspaceCategory::CTR => airspace::AirspaceCategory::D,
+        AirspaceCategory::RMZ => airspace::AirspaceCategory::RMZ,
+        AirspaceCategory::DANGER => airspace::AirspaceCategory::DANGER,
+        AirspaceCategory::RESTRICTED => airspace::AirspaceCategory::RESTRICTED,
+        AirspaceCategory::GLIDING => airspace::AirspaceCategory::GLIDING,
+      }
     }
   }
 }
@@ -163,9 +180,12 @@ enum AltitudeUnit {
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub enum AirspaceCategory {
   WAVE,
+  A,
+  B,
   C,
   D,
   E,
+  F,
   G,
   CTR,
   RMZ,
