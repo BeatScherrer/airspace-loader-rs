@@ -30,8 +30,6 @@ pub fn load_from_reader(
 ) -> Result<airspace::Airspaces, io::Error> {
     debug!("loading from reader");
 
-    let _airspaces = airspace::Airspaces::new();
-
     // deserialize to the specified format
     match specification {
         AirspaceSpecification::OpenAip => {
