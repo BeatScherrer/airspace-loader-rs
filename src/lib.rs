@@ -4,7 +4,7 @@ pub mod open_aip;
 // Assume OPEN aip data format for now since no other format is used and for POC
 pub struct AirspaceLoader {}
 
-use log::{debug, error, info, warn};
+use log::{debug, error, info};
 use serde_xml_rs;
 use std::fs;
 use std::io;
