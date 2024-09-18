@@ -31,21 +31,21 @@ use log4rs::encode::pattern::PatternEncoder;
 // use airspace_loader_rs::open_aip;
 
 fn main() {
-  // configure log4cxx logger
-  let stdout = ConsoleAppender::builder()
-    .encoder(Box::new(PatternEncoder::new("{d} - {m}{n}")))
-    .build();
+    // configure log4cxx logger
+    let stdout = ConsoleAppender::builder()
+        .encoder(Box::new(PatternEncoder::new("{d} - {m}{n}")))
+        .build();
 
-  let config = Config::builder()
-    .appender(Appender::builder().build("stdout", Box::new(stdout)))
-    .logger(Logger::builder().build("airspace_loader_rs", LevelFilter::Trace))
-    .build(Root::builder().appender("stdout").build(LevelFilter::Debug))
-    .unwrap();
+    let config = Config::builder()
+        .appender(Appender::builder().build("stdout", Box::new(stdout)))
+        .logger(Logger::builder().build("airspace_loader_rs", LevelFilter::Trace))
+        .build(Root::builder().appender("stdout").build(LevelFilter::Debug))
+        .unwrap();
 
-  pretty_env_logger::init();
+    pretty_env_logger::init();
 
-  log::trace!(target:"beat.open_aip", "Hello, World!");
+    log::trace!(target:"beat.open_aip", "Hello, World!");
 
-  // // Create the airspace loader
-  airspace_loader_rs::load_from_reader(Box::new(OPENAIP_EXAMPLE.as_bytes())).unwrap();
+    // // Create the airspace loader
+    airspace_loader_rs::load_from_reader(Box::new(OPENAIP_EXAMPLE.as_bytes())).unwrap();
 }
