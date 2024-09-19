@@ -87,7 +87,6 @@ mod test_open_aip {
   "#;
 
     #[test]
-
     fn test_load_from_reader() {
         setup();
 
