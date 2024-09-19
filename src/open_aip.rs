@@ -5,6 +5,7 @@
  */
 use crate::airspace;
 
+// use serde::de::{self, Deserialize, Deserializer, Visitor};
 use serde::de::Visitor;
 use serde::{Deserialize, Deserializer, Serialize};
 
@@ -164,7 +165,7 @@ pub struct Altitude {
     unit: AltitudeUnit,
 
     #[serde(rename = "$value")]
-    value: u32,
+    value: f32,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
