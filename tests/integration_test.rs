@@ -39,5 +39,13 @@ fn load_openaip_file() {
     println!("{:?}", test_airspace);
 
     // Create the airspace loader to read from a file
-    load_from_file("open_aip_test.xml", AirspaceSpecification::OpenAip).unwrap();
+    load_from_file(
+        "tests/open_aip/open_aip_test.xml",
+        AirspaceSpecification::OpenAip,
+    )
+    .unwrap();
+}
+#[test]
+fn load_openaip_ch() {
+    load_from_file("tests/open_aip/ch_asp.xml", AirspaceSpecification::OpenAip).unwrap();
 }
