@@ -2,8 +2,12 @@ use airspace_loader_rs::airspace;
 use airspace_loader_rs::load_from_file;
 use airspace_loader_rs::AirspaceSpecification;
 
+mod common;
+
 #[test]
 fn load_openaip_file() {
+    common::init_logger();
+
     let polygon = vec![
         (9.6255555555556, 48.5625),
         (9.8477777777778, 48.659444444444),
@@ -45,7 +49,10 @@ fn load_openaip_file() {
     )
     .unwrap();
 }
+
 #[test]
 fn load_openaip_ch() {
+    common::init_logger();
+
     load_from_file("tests/open_aip/ch_asp.xml", AirspaceSpecification::OpenAip).unwrap();
 }
