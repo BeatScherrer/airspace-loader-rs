@@ -39,11 +39,11 @@ pub enum AirspaceCategory {
 #[derive(Debug, Clone, PartialEq, Serialize)]
 pub enum Altitude {
     /// Flight level is always STD reference.
-    FL(u32, AltitudeReference),
+    FL(f32, AltitudeReference),
     /// Meters must specify a reference.
-    M(u32, AltitudeReference),
+    M(f32, AltitudeReference),
     /// Feet must also specify a reference.
-    FT(u32, AltitudeReference),
+    FT(f32, AltitudeReference),
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize)]

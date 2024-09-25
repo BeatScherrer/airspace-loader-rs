@@ -27,8 +27,8 @@ fn load_openaip_file() {
         id: Some(18024),
         country: String::from("DE"),
         name: String::from("ALB-OST"),
-        upper: airspace::Altitude::FL(100, airspace::AltitudeReference::STD),
-        lower: airspace::Altitude::FL(75, airspace::AltitudeReference::STD),
+        upper: airspace::Altitude::FL(100.0, airspace::AltitudeReference::STD),
+        lower: airspace::Altitude::FL(75.0, airspace::AltitudeReference::STD),
         geometry: polygon,
         category: airspace::AirspaceCategory::WAVE,
     };
