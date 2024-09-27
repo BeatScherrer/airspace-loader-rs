@@ -10,7 +10,7 @@ pub type Point = (f32, f32);
 #[derive(Debug, Clone, PartialEq, Serialize)]
 pub struct Airspace {
     pub version: Option<String>,
-    pub id: Option<u32>,
+    pub id: Option<String>,
     pub country: String,
     pub name: String,
     pub upper: Altitude,
@@ -28,6 +28,7 @@ pub enum AirspaceCategory {
     E,
     F,
     G,
+    TMA,
     RMZ,
     TMZ,
     GLIDING,

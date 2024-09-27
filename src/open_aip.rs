@@ -83,7 +83,7 @@ impl From<&Airspace> for airspace::Airspace {
                     },
                 ),
             },
-            id: Some(item.id),
+            id: Some(item.id.clone()),
             version: Some(item.version.clone()),
             country: item.country.clone(),
             name: item.name.clone(),
@@ -98,7 +98,9 @@ impl From<&Airspace> for airspace::Airspace {
                 AirspaceCategory::G => airspace::AirspaceCategory::G,
                 AirspaceCategory::WAVE => airspace::AirspaceCategory::WAVE,
                 AirspaceCategory::CTR => airspace::AirspaceCategory::D,
+                AirspaceCategory::TMA => airspace::AirspaceCategory::TMA,
                 AirspaceCategory::RMZ => airspace::AirspaceCategory::RMZ,
+                AirspaceCategory::TMZ => airspace::AirspaceCategory::TMZ,
                 AirspaceCategory::DANGER => airspace::AirspaceCategory::DANGER,
                 AirspaceCategory::RESTRICTED => airspace::AirspaceCategory::RESTRICTED,
                 AirspaceCategory::GLIDING => airspace::AirspaceCategory::GLIDING,
@@ -125,7 +127,7 @@ pub struct Airspace {
     pub version: String,
 
     #[serde(rename = "ID")]
-    pub id: u32,
+    pub id: String,
 
     #[serde(rename = "COUNTRY")]
     pub country: String,
@@ -186,7 +188,9 @@ pub enum AirspaceCategory {
     F,
     G,
     CTR,
+    TMA,
     RMZ,
+    TMZ,
     DANGER,
     RESTRICTED,
     GLIDING,
@@ -211,14 +215,17 @@ where
 {
     let mut points: Vec<(f32, f32)> = vec![];
 
-    let stringified: String = d.deserialize_string(StringVisitor).unwrap();
+    let stringified: String = d.deserialize_string(StringVisitor)?;
     let points_string: Vec<&str> = stringified.split(',').collect();
 
     for point_string in points_string {
         let point: Vec<f32> = point_string
             .trim()
             .split(' ')
-            .map(|s| s.parse::<f32>().unwrap())
+            .map(|s| {
+                s.parse::<f32>()
+                    .expect(&format!("failed to parse point {}", s))
+            })
             .collect();
 
         let point_tuple: (f32, f32) = (point[0], point[1]);
