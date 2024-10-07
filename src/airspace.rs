@@ -47,7 +47,7 @@ pub enum Altitude {
     FT(f32, AltitudeReference),
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize())]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub enum AltitudeReference {
     /// Standard pressure reference. FL implicitly is referenced to STD.
     STD,
