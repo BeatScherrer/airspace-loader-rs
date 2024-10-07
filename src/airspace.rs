@@ -1,13 +1,13 @@
 // TODO: user geo coordinates for airspace polygon
 // How should round segments be represented generally?
 
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
 pub type Airspaces = Vec<Airspace>;
 pub type Polygon = Vec<Point>;
 pub type Point = (f32, f32);
 
-#[derive(Debug, Clone, PartialEq, Serialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Airspace {
     pub version: Option<String>,
     pub id: Option<String>,
@@ -19,7 +19,7 @@ pub struct Airspace {
     pub category: AirspaceCategory,
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub enum AirspaceCategory {
     A,
     B,
@@ -37,7 +37,7 @@ pub enum AirspaceCategory {
     WAVE,
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub enum Altitude {
     /// Flight level is always STD reference.
     FL(f32, AltitudeReference),
@@ -47,7 +47,7 @@ pub enum Altitude {
     FT(f32, AltitudeReference),
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize())]
 pub enum AltitudeReference {
     /// Standard pressure reference. FL implicitly is referenced to STD.
     STD,
